@@ -1,5 +1,10 @@
 import os
-from myfunctions import purchase_list
+import shutil
+import sys
+
+from myfunctions import purchase_list, selection_block, attention_msg, separator
+import birthdayforever
+
 
 def menu_func():
     while True:
@@ -16,14 +21,35 @@ def menu_func():
         print('11. Change directory')
         print('12. Exit')
 
-        purchase_list(input('Select menu: '))
+        separator('-', 20)
+        choice_item = input('Select menu item: ')
 
-        if choice == '1':
+        if choice_item == '1':
             m_1_create_new_file()
-        elif choice == '2':
+        elif choice_item == '2':
             m_2_delete_folder()
-        elif choice == '12':
+        elif choice_item == '3':
+            m_3_copy_folder()
+        elif choice_item == '4':
+            m_4_show_cur_folder()
+        elif choice_item == '5':
+            m_5_show_fold_only()
+        elif choice_item == '6':
+            m_6_show_files_only()
+        elif choice_item == '7':
+            m_7_sys_info()
+        elif choice_item == '8':
+            m_8_show_author()
+        elif choice_item == '9':
+            birthdayforever.play_game()
+        elif choice_item == '10':
+            attention_msg('Не реализовано')
+        elif choice_item == '11':
+            m_11_change_dir()
+        elif choice_item == '12':
             break
+        else:
+            attention_msg('Unknown item!')
 
 
 def m_1_create_new_file():
@@ -31,7 +57,7 @@ def m_1_create_new_file():
     if not os.path.exists(folder_name):
         os.mkdir(folder_name)
     else:
-        print('папка существует')
+        attention_msg('папка уже существует')
 
 
 def m_2_delete_folder():
@@ -39,5 +65,45 @@ def m_2_delete_folder():
     if os.path.exists(del_folder_name):
         os.rmdir(del_folder_name)
     else:
-        print('папка отсутствует')
+        attention_msg('папка отсутствует')
 
+
+def m_3_copy_folder():
+    copy_folder_name = input('Input folder name for copy: ')
+    copied_folder_name = input('Input new name for copied folder: ')
+    shutil.copytree(copy_folder_name, copied_folder_name)
+
+
+def m_4_show_cur_folder():
+    selection_block(sys.path)
+
+
+def m_5_show_fold_only():
+    print("Folders in work directory:")
+    for item in os.listdir():
+        if os.path.isdir(item):
+            selection_block(item)
+
+
+def m_6_show_files_only():
+    for item in os.listdir():
+        selection_block(item)
+
+
+def m_7_sys_info():
+    print('System information: ')
+    print(f'User name: {os.getlogin()}')
+    print(f'System platform: {os.name}')
+
+
+def m_8_show_author():
+    selection_block(f'Author is {os.getlogin()}')
+
+
+def m_11_change_dir():
+    new_directory = input("Введите новую директорию: ")
+    if os.path.exists(new_directory):
+        os.chdir(new_directory)
+        print(f"Рабочая директория изменена на {new_directory}.")
+    else:
+        print(f"Директория {new_directory} не существует.")
